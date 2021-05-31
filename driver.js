@@ -1,8 +1,8 @@
 'use strict';
 
 const events = require('./events');
-const caps = require('./caps.js');
-const vendor = require('./vendor.js');
+// const caps = require('./caps.js');
+// const vendor = require('./vendor.js');
 
 setTimeout(() =>
 {

@@ -1,14 +1,6 @@
 'use strict';
-
-const faker = require('faker');
-require('jest');
-const {pickup}=require('../caps.js');
-const {inTransit}=require('../caps.js');
-const {delivered}=require('../caps.js');
 const events = require('../events');
-const vendor = require('../vendor');
-const driver = require('../driver');
-const {Order} = require('../vendor');
+
 
 describe('Events test', () => {
   let consoleSpy;
@@ -19,45 +11,67 @@ describe('Events test', () => {
     customer: 'Ethel Cole',
     address: 'Clovis, MA',
   };
-  it(' Should console log the pickup details', () => {
-    events.emit('pickup', test);
-    events.on('pickup', pickup);
-    let pickupHandler = {
-      EVENT : 'pickup',
-      time: new Date().toString().slice(0,15) ,
-      payload: test,
-    };
-  
-    const consoleSpy = jest.spyOn(console, 'log');
-    pickup(test);
-    expect(consoleSpy).toHaveBeenCalledWith(pickupHandler);
-  });
 
   beforeEach(()=> {
     consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
   });
-  jest.useFakeTimers();
-  afterEach(async() => {
-    await consoleSpy.mockRestore();
+  // jest.useFakeTimers();
+  afterEach(() => {
+    consoleSpy.mockRestore();
   });
 
-  jest.useFakeTimers();
-
-
-  it('test pickup handler', () => {
-    pickup(test);
+  it('test pickup handler', async() => {
+    events.emit('pickup',test);
+    await consoleSpy();
     expect(consoleSpy).toHaveBeenCalled();
   });
-  it('test inTransit handler', () => {
-    inTransit(test);
+  it('test inTransit handler', async() => {
+    events.emit('in-transit',test);
+    await consoleSpy();
     expect(consoleSpy).toHaveBeenCalled();
   });
-  it('test delivered handler', () => {
-    delivered(test);
+  it('test delivered handler', async() => {
+    events.emit('delivered',test);
+    await consoleSpy();
     expect(consoleSpy).toHaveBeenCalled();
   });
 
 
 });
 
+// describe('testing event handlers', ()=> {
+//   let consoleSpy;
+//   let obj = {
+//     store :'cake-shop',
+//     orderID : '885666cf-cb5f-4578-ac02-4a7dc7bdc5b2',
+//     customer : 'Gwendolyn Williamson',
+//     address : 'jordan',
+//   };
+//   beforeEach(()=> {
+//     consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+//   });
+    
+//   afterEach(()=> {
+//     consoleSpy.mockRestore();
+//   });
+
+//   it('pick up event handler', async ()=> {
+//     events.emit('pickup',obj);
+//     await consoleSpy();
+//     expect(consoleSpy).toHaveBeenCalled();
+//   });
+
+//   it('intransit event handler', async ()=> {
+//     events.emit('in-transit',obj);
+//     await consoleSpy();
+//     expect(consoleSpy).toHaveBeenCalled();
+//   });
+
+//   it('delivered event handler', async ()=> {
+//     events.emit('delivered',obj);
+//     await consoleSpy();
+//     expect(consoleSpy).toHaveBeenCalled();
+//   });
+    
+// });
